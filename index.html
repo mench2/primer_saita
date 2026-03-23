@@ -1,0 +1,837 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+  <title>Вика и Макс — свадебное приглашение</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-light: #cdbfb2;
+      --bg-dark: #540b16;
+      --text-dark: #540b16;
+      --text-light: #cdbfb2;
+      --accent-pink: #e8d5d0;
+      --accent-rose: #d4a5a0;
+      --accent-dark: #8b6f6a;
+      
+      /* Палитра */
+      --pal-champagne: #F2E5C6;
+      --pal-sand: #F2D9A0;
+      --pal-burgundy: #75162D;
+      --pal-maroon: #560B18;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    html {
+      /* Убрали overflow-x отсюда, чтобы не ломать скролл на iOS */
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: 'Montserrat', sans-serif;
+      background: var(--bg-light);
+      color: var(--text-dark);
+      line-height: 1.6;
+      width: 100%;
+      overflow-x: hidden; /* Оставляем только на body */
+      -webkit-font-smoothing: antialiased;
+      position: relative;
+    }
+
+    h1, h2, h3, h4, h5, h6 {
+      font-family: 'Playfair Display', serif;
+    }
+
+    /* --- HERO SECTION (десктоп — классическая карточка) --- */
+    .hero-section {
+      min-height: 100vh;
+      min-height: 100svh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 2rem 1rem;
+      position: relative;
+    }
+
+    .hero-content {
+      width: 100%;
+      max-width: 500px;
+      z-index: 10;
+      position: relative;
+    }
+
+    .save-the-day {
+      font-size: 0.7rem;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      margin-bottom: 2rem;
+      opacity: 0;
+      animation: fadeInUp 0.8s ease-out 0.2s forwards;
+    }
+
+    .hero-photo {
+      width: 75%;
+      margin: 0 auto 2rem;
+      display: block;
+      aspect-ratio: 3/4;
+      object-fit: cover;
+      border-radius: 24px; 
+      box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+      opacity: 0;
+      animation: fadeInUp 0.8s ease-out 0.4s forwards;
+      position: relative;
+    }
+    
+    .hero-photo::after {
+      content: '';
+      position: absolute;
+      top: -10px; left: -10px; right: -10px; bottom: -10px;
+      border: 1px solid var(--accent-dark);
+      border-radius: 30px;
+      opacity: 0.3;
+      z-index: -1;
+    }
+
+    .hero-names {
+      font-size: clamp(2rem, 10vw, 3.5rem);
+      line-height: 1.1;
+      margin-bottom: 1rem;
+      opacity: 0;
+      animation: fadeInUp 0.8s ease-out 0.6s forwards;
+    }
+    .hero-names span { font-style: italic; font-weight: 300; margin: 0 5px; }
+
+    .hero-date-wrapper {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 15px;
+      opacity: 0;
+      animation: fadeInUp 0.8s ease-out 0.8s forwards;
+    }
+    .hero-date-line { flex: 1; height: 1px; background: var(--text-dark); opacity: 0.3; max-width: 60px; }
+    .hero-date { font-size: 1rem; letter-spacing: 0.15em; }
+
+    /* Цветы (фон) — анимация как на первом сайте */
+    .hero-flowers { position: absolute; inset: 0; pointer-events: none; z-index: 1; overflow: hidden; }
+    .hero-flower {
+      position: absolute;
+      opacity: 0;
+      transition: opacity 1.2s cubic-bezier(0.4, 0, 0.2, 1), transform 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+      width: 300px;
+      max-width: 50vw;
+      filter: blur(0.5px);
+    }
+    .hero-flower img { width: 100%; height: auto; object-fit: contain; }
+    .hero-flower.show { opacity: 0.12; }
+
+    .hf-tl { top: -5%; left: -10%; }
+    .hf-tl.show { transform: rotate(-10deg); }
+    .hf-tl.hide { transform: scale(0.8) rotate(-10deg) translateY(200px) translateX(150px) !important; opacity: 0 !important; }
+
+    .hf-tr { top: -5%; right: -10%; }
+    .hf-tr.show { transform: rotate(10deg); }
+    .hf-tr.hide { transform: scale(0.8) rotate(10deg) translateY(200px) translateX(-150px) !important; opacity: 0 !important; }
+
+    .hf-bl { bottom: -5%; left: -10%; }
+    .hf-bl.show { transform: rotate(10deg); }
+    .hf-bl.hide { transform: scale(0.8) rotate(10deg) translateY(-100px) translateX(180px) !important; opacity: 0 !important; }
+
+    .hf-br { bottom: -5%; right: -10%; }
+    .hf-br.show { transform: rotate(-10deg); }
+    .hf-br.hide { transform: scale(0.8) rotate(-10deg) translateY(-100px) translateX(-180px) !important; opacity: 0 !important; }
+
+    /* --- COMMON --- */
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+      width: 100%;
+      position: relative;
+      z-index: 2;
+    }
+    .section-title {
+      font-size: clamp(2rem, 5vw, 2.5rem);
+      text-align: center;
+      margin-bottom: 2.5rem;
+      color: var(--bg-dark);
+    }
+
+    /* --- COUNTDOWN --- */
+    .countdown-section {
+      background: var(--bg-dark);
+      padding: 3rem 1rem;
+      margin: 1rem;
+      border-radius: 20px;
+      text-align: center;
+      box-shadow: 0 10px 30px rgba(86, 11, 24, 0.25);
+    }
+    .countdown-title { color: var(--text-light); font-size: 1.8rem; margin-bottom: 2rem; }
+    .countdown-grid { display: flex; justify-content: center; gap: 10px; }
+    .countdown-item {
+      background: rgba(255,255,255,0.08);
+      padding: 10px;
+      border-radius: 12px;
+      min-width: 60px;
+      flex: 1;
+      max-width: 90px;
+    }
+    .countdown-number {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(1.8rem, 6vw, 2.5rem);
+      color: var(--text-light);
+      line-height: 1;
+      display: block;
+    }
+    .countdown-label { font-size: 0.65rem; text-transform: uppercase; color: rgba(205, 191, 178, 0.7); margin-top: 5px; }
+    .countdown-separator { color: var(--text-light); font-size: 2rem; opacity: 0.5; padding-top: 5px; }
+    @media (max-width: 480px) { .countdown-separator { display: none; } }
+
+    /* --- SCHEDULE & MAP --- */
+    .schedule-section {
+      background: var(--bg-dark);
+      color: var(--bg-light);
+      padding: 4rem 1.5rem;
+      margin: 1rem;
+      border-radius: 20px;
+    }
+    .schedule-section .section-title { color: var(--bg-light); }
+    
+    .schedule-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      margin-bottom: 2.5rem;
+      padding-bottom: 1.5rem;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+    .schedule-item:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+    .schedule-time { font-family: 'Playfair Display', serif; font-size: 1.5rem; color: var(--accent-rose); margin-bottom: 0.5rem; font-weight: bold; }
+    .schedule-event h3 { font-size: 1.2rem; margin-bottom: 0.3rem; font-weight: 500; }
+    .schedule-event p { font-size: 0.9rem; opacity: 0.8; }
+
+    /* КАРТА С ЗАЩИТОЙ ОТ СКРОЛЛА */
+    .map-wrapper {
+        position: relative;
+        width: 100%;
+        height: 300px;
+        border-radius: 12px;
+        overflow: hidden;
+    }
+    .map-overlay {
+        position: absolute;
+        top: 0; left: 0; width: 100%; height: 100%;
+        background: transparent;
+        z-index: 5;
+        /* cursor: pointer; */
+    }
+    iframe { width: 100%; height: 100%; border: 0; }
+
+    /* --- DRESS CODE --- */
+    .dresscode-section { padding: 3rem 1.5rem; }
+    .color-palette { display: flex; justify-content: center; gap: 8px; margin: 2rem 0; }
+    .color-bar { width: 40px; height: 120px; border-radius: 50px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+    .dresscode-note { background: var(--accent-pink); padding: 1.5rem; border-radius: 16px; text-align: center; font-size: 0.95rem; }
+
+    /* --- DETAILS --- */
+    .details-section { padding: 3rem 1.5rem; }
+    .details-grid { display: grid; gap: 2rem; }
+    .details-item { background: rgba(255,255,255,0.4); padding: 1.5rem; border-radius: 16px; border: 1px solid rgba(84, 11, 22, 0.05); }
+    .details-item a { text-decoration: none; color: inherit; font-weight: bold; transition: color 0.3s ease; }
+    .details-item a:hover { color: var(--accent-rose); }
+    .details-item h3 { color: var(--bg-dark); font-size: 1.4rem; margin-bottom: 0.8rem; }
+    .details-item.important { background: var(--pal-champagne); border: 2px solid var(--pal-burgundy); text-align: center; order: -1; }
+    .badge-18 { display: inline-block; background: var(--pal-burgundy); color: var(--pal-champagne); font-family: 'Playfair Display', serif; font-size: 1.8rem; padding: 0.2rem 1rem; border-radius: 50px; margin-bottom: 1rem; }
+
+    /* --- GALLERY --- */
+    .gallery-section { padding: 0 1.5rem 4rem; }
+    .gallery-item { border-radius: 16px; overflow: hidden; box-shadow: 0 8px 20px rgba(0,0,0,0.15); }
+    .gallery-item img { width: 100%; height: auto; display: block; }
+
+    /* --- RSVP FORM --- */
+    .rsvp-section { background: var(--bg-dark); padding: 4rem 1.5rem 6rem; margin: 2rem 1rem 1rem; border-radius: 20px; color: var(--text-light); }
+    .rsvp-section .section-title { color: var(--text-light); }
+    .rsvp-form { background: rgba(255,255,255,0.05); padding: 1.5rem; border-radius: 16px; }
+    .form-group { margin-bottom: 1.5rem; }
+    .form-label { display: block; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.8rem; opacity: 0.9; }
+    input[type="text"] { width: 100%; padding: 1rem; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); border-radius: 10px; color: #fff; font-size: 16px; font-family: inherit; }
+    input:focus { outline: none; border-color: var(--accent-rose); background: rgba(255,255,255,0.15); }
+    
+    .radio-group { display: flex; gap: 10px; }
+    .radio-option { flex: 1; position: relative; }
+    .radio-option input { position: absolute; opacity: 0; width: 0; height: 0; }
+    .radio-option label { display: block; text-align: center; padding: 1rem; background: rgba(255,255,255,0.1); border-radius: 10px; cursor: pointer; transition: 0.2s; font-weight: 500; }
+    .radio-option input:checked + label { background: var(--pal-champagne); color: var(--bg-dark); font-weight: bold; }
+
+    .checkbox-group { display: grid; grid-template-columns: 1fr; gap: 10px; }
+    .checkbox-option { display: flex; align-items: center; }
+    .checkbox-option label { display: flex; align-items: center; padding: 0.8rem; background: rgba(255,255,255,0.05); border-radius: 10px; cursor: pointer; flex: 1; }
+    .checkbox-option input { margin-right: 12px; width: 22px; height: 22px; flex-shrink: 0; appearance: none; -webkit-appearance: none; border: 2px solid rgba(255,255,255,0.4); border-radius: 6px; background: transparent; cursor: pointer; position: relative; transition: background 0.2s, border-color 0.2s; }
+    .checkbox-option input:checked { background: var(--pal-champagne); border-color: var(--pal-champagne); }
+    .checkbox-option input:checked::after { content: '✓'; position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; color: var(--bg-dark); font-size: 14px; font-weight: bold; }
+
+    .form-submit { width: 100%; padding: 1.2rem; background: var(--pal-champagne); color: var(--bg-dark); border: none; border-radius: 12px; font-size: 1.1rem; font-weight: bold; margin-top: 1rem; cursor: pointer; }
+    .section-divider { height: 1px; background: rgba(84, 11, 22, 0.2); width: 60%; margin: 3rem auto; border: none; }
+
+    @keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes scaleIn { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
+    @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.7; } }
+
+    [data-animate] { opacity: 0; transform: translateY(40px); transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1); }
+    [data-animate="fade-up"] { transform: translateY(40px); }
+    [data-animate="fade-left"] { transform: translateX(-40px); }
+    [data-animate="fade-right"] { transform: translateX(40px); }
+    [data-animate="scale"] { transform: scale(0.95); }
+    [data-animate].visible { opacity: 1; transform: translateY(0) translateX(0) scale(1); }
+
+    .countdown-item { opacity: 0; animation: scaleIn 0.6s ease-out forwards; }
+    .countdown-item:nth-of-type(1) { animation-delay: 0.1s; }
+    .countdown-item:nth-of-type(2) { animation-delay: 0.2s; }
+    .countdown-item:nth-of-type(3) { animation-delay: 0.3s; }
+    .countdown-item:nth-of-type(4) { animation-delay: 0.4s; }
+    .countdown-number { animation: pulse 2s ease-in-out infinite; }
+
+    /* Плавающие цветы */
+    .floating-hearts { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 50; overflow: hidden; }
+    .floating-heart { position: absolute; width: 40px; height: 40px; opacity: 0; animation: floatHeart 15s infinite ease-in-out; }
+    .floating-heart img { width: 100%; height: 100%; object-fit: contain; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2)); }
+    @keyframes floatHeart {
+      0% { opacity: 0; transform: translateY(100vh) rotate(0deg); }
+      10% { opacity: 0.3; }
+      90% { opacity: 0.3; }
+      100% { opacity: 0; transform: translateY(-100px) rotate(360deg); }
+    }
+
+    @media (min-width: 768px) {
+      .checkbox-group { grid-template-columns: 1fr 1fr; }
+      .schedule-item { flex-direction: row; text-align: left; }
+      .schedule-time { min-width: 100px; margin-right: 20px; margin-bottom: 0; }
+      .details-grid { grid-template-columns: 1fr 1fr; }
+      .details-item.important { grid-column: span 2; }
+      .hero-photo { width: 400px; }
+      .container { max-width: 800px; }
+    }
+
+    /* Мобильный hero — фото фоном + мягкие края */
+    @media (max-width: 768px) {
+      .hero-section {
+        overflow: hidden;
+        color: var(--text-light);
+        background:
+          linear-gradient(120deg, rgba(0, 0, 0, 0.45), rgba(84, 11, 22, 0.85)),
+          url('photo_5267273164138418047_y.jpg') center/cover no-repeat;
+      }
+
+      .hero-section::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: radial-gradient(circle at top, rgba(255, 255, 255, 0.18), transparent 60%);
+        mix-blend-mode: soft-light;
+        pointer-events: none;
+        z-index: 0;
+      }
+
+      /* Размытый низ фото, чтобы не было резкого обрыва */
+      .hero-section::after {
+        content: '';
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        height: 10px;
+        /* Плавный переход от фото к фону страницы, без резкой границы */
+        background: linear-gradient(
+          to bottom,
+          rgba(84, 11, 22, 0) 0%,
+          rgba(84, 11, 22, 0.6) 35%,
+          var(--bg-light) 100%
+        );
+        pointer-events: none;
+        z-index: 1;
+      }
+
+      .hero-content {
+        max-width: 520px;
+        z-index: 2;
+        padding: 1.6rem 1.4rem;
+        border-radius: 22px;
+        background: rgba(84, 11, 22, 0.82);
+        box-shadow: 0 18px 40px rgba(0, 0, 0, 0.55);
+        backdrop-filter: blur(10px);
+      }
+
+      .save-the-day {
+        margin-bottom: 1.4rem;
+        color: var(--text-light);
+      }
+
+      .hero-photo {
+        display: none;
+      }
+
+      .hero-names {
+        color: var(--text-light);
+      }
+
+      .hero-date-line {
+        background: rgba(205, 191, 178, 0.8);
+        opacity: 1;
+      }
+
+      .hero-date {
+        color: var(--text-light);
+      }
+
+      /* Цветы — сильнее блюр и мягче, чтобы не было заметно “кривых” краёв */
+      .hero-flower {
+        filter: blur(1.3px);
+      }
+
+      .hero-flower.show {
+        opacity: 0.08;
+      }
+
+      .hero-flower img {
+        filter: blur(0.8px);
+      }
+    }
+
+    /* Мобильная оптимизация формы */
+    @media (max-width: 480px) {
+      .rsvp-section {
+        margin: 1.5rem 0.75rem 1rem;
+        padding: 3rem 1rem 4rem;
+        border-radius: 18px;
+      }
+
+      .rsvp-form {
+        padding: 1.2rem 1rem;
+        border-radius: 14px;
+      }
+
+      .form-group {
+        margin-bottom: 1.25rem;
+      }
+
+      .form-label {
+        font-size: 0.75rem;
+        margin-bottom: 0.6rem;
+      }
+
+      .radio-group {
+        flex-direction: column;
+        gap: 8px;
+      }
+
+      .radio-option label {
+        padding: 0.8rem;
+        font-size: 0.9rem;
+      }
+
+      .checkbox-group {
+        gap: 8px;
+      }
+
+      .checkbox-option label {
+        padding: 0.7rem 0.8rem;
+        font-size: 0.9rem;
+      }
+
+      input[type="text"] {
+        padding: 0.85rem 0.9rem;
+        font-size: 0.95rem;
+      }
+
+      .form-submit {
+        padding: 1rem;
+        font-size: 1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="floating-hearts" id="floatingHearts"></div>
+
+  <section class="hero-section">
+    <div class="hero-flowers">
+      <div class="hero-flower hf-tl"><img src="Gemini_Generated_Image_dr87k5dr87k.png" alt=""></div>
+      <div class="hero-flower hf-tr"><img src="234231234234.png" alt=""></div>
+      <div class="hero-flower hf-bl"><img src="234231234234.png" alt=""></div>
+      <div class="hero-flower hf-br"><img src="Gemini_Generated_Image_dr87k5dr87k.png" alt=""></div>
+    </div>
+
+    <div class="hero-content">
+      <div class="save-the-day">проведите этот день с нами</div>
+      <img src="photo_5267273164138418047_y.jpg" alt="Вика и Макс" class="hero-photo">
+      <h1 class="hero-names">ВИКА <span>&</span> МАКС</h1>
+      <div class="hero-date-wrapper">
+        <div class="hero-date-line"></div>
+        <div class="hero-date">14.08.2026</div>
+        <div class="hero-date-line"></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="countdown-section" data-animate>
+    <div class="container">
+      <h2 class="countdown-title">До свадьбы осталось</h2>
+      <div class="countdown-grid">
+        <div class="countdown-item"><span class="countdown-number" id="days">000</span><div class="countdown-label">дней</div></div>
+        <span class="countdown-separator">:</span>
+        <div class="countdown-item"><span class="countdown-number" id="hours">00</span><div class="countdown-label">часов</div></div>
+        <span class="countdown-separator">:</span>
+        <div class="countdown-item"><span class="countdown-number" id="minutes">00</span><div class="countdown-label">мин</div></div>
+        <span class="countdown-separator">:</span>
+        <div class="countdown-item"><span class="countdown-number" id="seconds">00</span><div class="countdown-label">сек</div></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="schedule-section" data-animate>
+    <div class="container">
+      <h2 class="section-title">Программа дня</h2>
+      <div class="schedule-timeline">
+        <div class="schedule-item">
+          <div class="schedule-time">11:00</div>
+          <div class="schedule-event"><h3>Сбор гостей</h3><p>Локация: «Шекснинский отдел ЗАГС»</br>рп. Шексна, ул. Октябрьская, д. 67</p></div>
+        </div>
+        <div class="schedule-item">
+          <div class="schedule-time">12:30</div>
+          <div class="schedule-event"><h3>Церемония</h3><p>Трогательный момент</p></div>
+        </div>
+        <div class="schedule-item">
+          <div class="schedule-time">14:00</div>
+          <div class="schedule-event"><h3>Выезд</h3><p>Едем на банкет</p></div>
+        </div>
+        <div class="schedule-item">
+          <div class="schedule-time">15:00</div>
+          <div class="schedule-event"><h3>ЗАГС</h3><p>Торжественная роспись</p></div>
+        </div>
+        <div class="schedule-item">
+          <div class="schedule-time">17:00</div>
+          <div class="schedule-event"><h3>Банкет</h3><p>Ужин и танцы</p></div>
+        </div>
+      </div>
+
+      <div style="margin-top: 4rem; padding-top: 2rem; border-top: 1px solid rgba(255,255,255,0.1);">
+        <h2 class="section-title" style="color: var(--text-light)">Локация</h2>
+        <h3 style="font-size: 1.5rem; margin-bottom: 0.5rem;">Банкетный зал "Северная"</h3>
+        <p style="margin-bottom: 2rem; opacity: 0.8;">пгт. Шексна, мкр. Шексна Северная,<br>ул. Первомайская, 1А</p>
+        
+        <div class="map-wrapper">
+            <div class="map-overlay" onclick="this.style.pointerEvents='none'; this.style.opacity='0';"></div>
+            <iframe src="https://yandex.ru/map-widget/v1/?um=constructor%3A39fe2b4b3f9c3e03560268ad282b331535bfaf7bff9c19db2410ebe4716d02a6&amp;source=constructor" frameborder="0"></iframe>
+        </div>
+        <p style="font-size: 0.8rem; opacity: 0.6; margin-top: 0.5rem;">Нажмите на карту, чтобы активировать</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="dresscode-section" data-animate>
+    <div class="container">
+      <h2 class="section-title">Дресс-код</h2>
+      <p style="text-align: center;">Мы будем рады, если вы поддержите палитру нашей свадьбы</p>
+      <div class="color-palette">
+        <div class="color-bar" style="background: #F2E5C6;"></div>
+        <div class="color-bar" style="background: #F2D9A0;"></div>
+        <div class="color-bar" style="background: #75162D;"></div>
+        <div class="color-bar" style="background: #560B18;"></div>
+        <div class="color-bar" style="background: #3B010B;"></div>
+      </div>
+      <div class="dresscode-note">
+        <strong>Важно:</strong> Удобная обувь для танцев приветствуется!
+      </div>
+    </div>
+  </section>
+
+  <hr class="section-divider">
+
+  <section class="details-section" data-animate>
+    <div class="container">
+      <h2 class="section-title">Детали</h2>
+      <div class="details-grid">
+        <div class="details-item important">
+          <span class="badge-18">18+</span>
+          <h3>Важно</h3>
+          <p>Мы хотим, чтобы вы отдохнули. Вечер пройдет без детей.</p>
+        </div>
+        <div class="details-item">
+          <h3>Подарки</h3>
+          <p>Просим вас не дарить нам цветы. Сразу после торжества мы уезжаем в свадебное путешествие и не сможем насладиться их красотой. Однако вы можете выразить свою любовь и радость, подарив нам подарочный сертификат или бутылку хорошего вина или шампанского. Мы обещаем, что эти подарки точно не завянут!</p>
+        </div>
+        <div class="details-item">
+          <h3>Трансфер</h3>
+          <p>Будет организован трансфер. Подробности сообщим дополнительно.</p>
+        </div>
+        <div class="details-item">
+          <h3>Связь</h3>
+          <p>Жених: <a href="tel:+79629950057">+7 (962) 995-00-57</a></p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="gallery-section" data-animate>
+    <div class="container">
+      <div class="gallery-item">
+        <img src="photo_5267273164138418050_y.jpg" alt="Мы">
+      </div>
+    </div>
+  </section>
+
+  <section class="rsvp-section" id="rsvp" data-animate>
+    <div class="container">
+      <h2 class="section-title">Анкета гостя</h2>
+      <p style="text-align: center; margin-bottom: 2rem; opacity: 0.8;">Пожалуйста, подтвердите присутствие до 1 июля</p>
+      
+      <form class="rsvp-form" id="rsvpForm">
+        <div class="form-group">
+          <label class="form-label">Ваши Имя и Фамилия</label>
+          <input type="text" name="name" required placeholder="Иван Иванов">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Присутствие</label>
+          <div class="radio-group">
+            <div class="radio-option">
+              <input type="radio" id="yes" name="attendance" value="yes" checked>
+              <label for="yes">Я буду</label>
+            </div>
+            <div class="radio-option">
+              <input type="radio" id="no" name="attendance" value="no">
+              <label for="no">Не смогу</label>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Какое вино предпочитаете?</label>
+          <div class="radio-group wine-group">
+            <div class="radio-option">
+              <input type="radio" id="wine-dry" name="wine" value="dry">
+              <label for="wine-dry">Сухое</label>
+            </div>
+            <div class="radio-option">
+              <input type="radio" id="wine-semi-dry" name="wine" value="semi-dry">
+              <label for="wine-semi-dry">Полусухое</label>
+            </div>
+            <div class="radio-option">
+              <input type="radio" id="wine-semi-sweet" name="wine" value="semi-sweet">
+              <label for="wine-semi-sweet">Полусладкое</label>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Напитки</label>
+          <div class="checkbox-group">
+            <div class="checkbox-option"><label><input type="checkbox" name="alcohol_white" value="1"> Белое вино</label></div>
+            <div class="checkbox-option"><label><input type="checkbox" name="alcohol_red" value="1"> Красное вино</label></div>
+            <div class="checkbox-option"><label><input type="checkbox" name="alcohol_champagne" value="1"> Шампанское</label></div>
+            <div class="checkbox-option"><label><input type="checkbox" name="alcohol_cognac" value="1"> Коньяк</label></div>
+            <div class="checkbox-option"><label><input type="checkbox" name="alcohol_vodka" value="1"> Водка</label></div>
+            <div class="checkbox-option"><label><input type="checkbox" name="alcohol_non_alcoholic" value="1"> Б/А напитки</label></div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Аллергия</label>
+          <input type="text" name="allergies" placeholder="Если есть">
+        </div>
+
+        <button type="submit" class="form-submit">Отправить</button>
+      </form>
+    </div>
+  </section>
+
+  <script>
+    const targetDate = new Date('2026-08-14T11:00:00+03:00').getTime();
+    
+    function updateTimer() {
+      const now = new Date().getTime();
+      const diff = targetDate - now;
+
+      if (diff < 0) return;
+
+      const d = Math.floor(diff / (1000 * 60 * 60 * 24));
+      const h = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+      const s = Math.floor((diff % (1000 * 60)) / 1000);
+
+      document.getElementById('days').innerText = String(d).padStart(3, '0');
+      document.getElementById('hours').innerText = h < 10 ? '0'+h : h;
+      document.getElementById('minutes').innerText = m < 10 ? '0'+m : m;
+      document.getElementById('seconds').innerText = s < 10 ? '0'+s : s;
+    }
+    setInterval(updateTimer, 1000);
+    updateTimer();
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+
+    document.querySelectorAll('[data-animate]').forEach(el => observer.observe(el));
+
+    // Hero-цветы: появление через 0.5с и скрытие при скролле (как на первом сайте)
+    const heroSection = document.querySelector('.hero-section');
+    const heroFlowers = document.querySelectorAll('.hero-flower');
+    let heroFlowersVisible = false;
+
+    setTimeout(() => {
+      heroFlowers.forEach((flower, index) => {
+        setTimeout(() => flower.classList.add('show'), index * 100);
+      });
+      heroFlowersVisible = true;
+    }, 500);
+
+    function handleHeroScroll() {
+      const scrollY = window.scrollY || window.pageYOffset;
+      const heroBottom = heroSection.offsetTop + heroSection.offsetHeight;
+      if (scrollY > heroBottom * 0.3 && heroFlowersVisible) {
+        heroFlowersVisible = false;
+        heroFlowers.forEach((f, i) => setTimeout(() => { f.classList.remove('show'); f.classList.add('hide'); }, i * 50));
+      } else if (scrollY <= heroBottom * 0.3 && !heroFlowersVisible) {
+        heroFlowersVisible = true;
+        heroFlowers.forEach((f, i) => setTimeout(() => { f.classList.remove('hide'); f.classList.add('show'); }, i * 80));
+      }
+    }
+    window.addEventListener('scroll', handleHeroScroll, { passive: true });
+
+    // Плавающие цветы
+    function createFloatingHearts() {
+      const container = document.getElementById('floatingHearts');
+      for (let i = 0; i < 8; i++) {
+        const el = document.createElement('div');
+        el.className = 'floating-heart';
+        const img = document.createElement('img');
+        img.src = 'Flower.png';
+        img.alt = '';
+        el.appendChild(img);
+        el.style.left = Math.random() * 100 + '%';
+        el.style.animationDelay = Math.random() * 15 + 's';
+        el.style.animationDuration = (10 + Math.random() * 10) + 's';
+        container.appendChild(el);
+      }
+    }
+    createFloatingHearts();
+
+    document.getElementById('rsvpForm').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      const btn = this.querySelector('button');
+      const originalText = btn.innerText;
+      btn.innerText = 'Отправка...';
+
+      const form = this;
+      const formData = new FormData(form);
+      const wineLabels = { dry: 'Сухое', 'semi-dry': 'Полусухое', 'semi-sweet': 'Полусладкое' };
+      const wine = formData.get('wine') ? wineLabels[formData.get('wine')] : '—';
+      const alcoholList = [];
+      if (formData.get('alcohol_white')) alcoholList.push('Белое вино');
+      if (formData.get('alcohol_red')) alcoholList.push('Красное вино');
+      if (formData.get('alcohol_champagne')) alcoholList.push('Шампанское');
+      if (formData.get('alcohol_cognac')) alcoholList.push('Коньяк');
+      if (formData.get('alcohol_vodka')) alcoholList.push('Водка');
+      if (formData.get('alcohol_non_alcoholic')) alcoholList.push('Б/А');
+      const alcoholStr = alcoholList.length ? alcoholList.join(', ') : '—';
+
+      const text = `💌 <b>Новый ответ!</b>
+👤 ${formData.get('name')}
+✅ ${formData.get('attendance') === 'yes' ? 'Будет' : 'Не сможет'}
+🍇 Вино: ${wine}
+🍷 Напитки: ${alcoholStr}
+🤧 Аллергии: ${formData.get('allergies') || '—'}`;
+
+      const TOKEN = '8316450407:AAFQbmRbqaixPabmm9Ek8GkR1_DV4oPqdrI';
+      const CHAT_ID = '-1003830584076';
+      const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxfsYsfwQ6Qlw6gDwPInwbMiMy3DPwJCqpSGQPL6n7_6PaQMFSq3pFZAydXHG832JI/exec'; // Вставь сюда URL веб-приложения из Google Apps Script
+
+      const payload = {
+        name: formData.get('name'),
+        attendance: formData.get('attendance'),
+        wine: formData.get('wine') || '',
+        alcohol_white: !!formData.get('alcohol_white'),
+        alcohol_red: !!formData.get('alcohol_red'),
+        alcohol_champagne: !!formData.get('alcohol_champagne'),
+        alcohol_cognac: !!formData.get('alcohol_cognac'),
+        alcohol_vodka: !!formData.get('alcohol_vodka'),
+        alcohol_non_alcoholic: !!formData.get('alcohol_non_alcoholic'),
+        allergies: formData.get('allergies') || ''
+      };
+
+      try {
+        await fetch(`https://api.telegram.org/bot${TOKEN}/sendMessage`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ chat_id: CHAT_ID, text: text, parse_mode: 'html' })
+        });
+        if (GOOGLE_SCRIPT_URL) {
+          // Важно: Apps Script плохо дружит с CORS/preflight для JSON.
+          // Поэтому шлём "simple request" (form-urlencoded), это стабильно.
+          const googleBody = new URLSearchParams({
+            name: payload.name,
+            attendance: payload.attendance,
+            wine: payload.wine,
+            alcohol_white: payload.alcohol_white ? '1' : '0',
+            alcohol_red: payload.alcohol_red ? '1' : '0',
+            alcohol_champagne: payload.alcohol_champagne ? '1' : '0',
+            alcohol_cognac: payload.alcohol_cognac ? '1' : '0',
+            alcohol_vodka: payload.alcohol_vodka ? '1' : '0',
+            alcohol_non_alcoholic: payload.alcohol_non_alcoholic ? '1' : '0',
+            allergies: payload.allergies
+          }).toString();
+
+          // 1) Самый живучий вариант (без CORS/ответа)
+          let sentToGoogle = false;
+          try {
+            if (navigator.sendBeacon) {
+              const blob = new Blob([googleBody], { type: 'application/x-www-form-urlencoded;charset=UTF-8' });
+              sentToGoogle = navigator.sendBeacon(GOOGLE_SCRIPT_URL, blob);
+            }
+          } catch (_) {}
+
+          // 2) Если beacon не сработал — пробуем fetch
+          if (!sentToGoogle) {
+            try {
+              await fetch(GOOGLE_SCRIPT_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8' },
+                body: googleBody
+              });
+              sentToGoogle = true;
+            } catch (_) {}
+          }
+
+          // 3) Последний фоллбек: GET через картинку (нужен doGet в Apps Script)
+          if (!sentToGoogle) {
+            const img = new Image();
+            img.src = `${GOOGLE_SCRIPT_URL}?${googleBody}`;
+          }
+        }
+        alert('Спасибо! Мы получили ваш ответ.');
+        form.reset();
+      } catch (err) {
+        alert('Ошибка отправки. Напишите нам лично.');
+      } finally {
+        btn.innerText = originalText;
+      }
+    });
+  </script>
+</body>
+</html>
