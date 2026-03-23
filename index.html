@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
-  <title>Вика и Макс — свадебное приглашение</title>
+  <title>Имя и Имя — свадебное приглашение</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
@@ -32,7 +32,6 @@
     }
 
     html {
-      /* Убрали overflow-x отсюда, чтобы не ломать скролл на iOS */
       scroll-behavior: smooth;
     }
 
@@ -42,7 +41,7 @@
       color: var(--text-dark);
       line-height: 1.6;
       width: 100%;
-      overflow-x: hidden; /* Оставляем только на body */
+      overflow-x: hidden; 
       -webkit-font-smoothing: antialiased;
       position: relative;
     }
@@ -123,7 +122,6 @@
     .hero-date-line { flex: 1; height: 1px; background: var(--text-dark); opacity: 0.3; max-width: 60px; }
     .hero-date { font-size: 1rem; letter-spacing: 0.15em; }
 
-    /* Цветы (фон) — анимация как на первом сайте */
     .hero-flowers { position: absolute; inset: 0; pointer-events: none; z-index: 1; overflow: hidden; }
     .hero-flower {
       position: absolute;
@@ -394,7 +392,6 @@
         color: var(--text-light);
       }
 
-      /* Цветы — сильнее блюр и мягче, чтобы не было заметно “кривых” краёв */
       .hero-flower {
         filter: blur(1.3px);
       }
@@ -474,11 +471,11 @@
 
     <div class="hero-content">
       <div class="save-the-day">проведите этот день с нами</div>
-      <img src="photo_5267273164138418047_y.jpg" alt="Вика и Макс" class="hero-photo">
-      <h1 class="hero-names">ВИКА <span>&</span> МАКС</h1>
+      <img src="photo_5267273164138418047_y.jpg" alt="Имя и Имя" class="hero-photo">
+      <h1 class="hero-names">Имя <span>&</span> Имя</h1>
       <div class="hero-date-wrapper">
         <div class="hero-date-line"></div>
-        <div class="hero-date">14.08.2026</div>
+        <div class="hero-date">01.01.2027</div>
         <div class="hero-date-line"></div>
       </div>
     </div>
@@ -505,7 +502,7 @@
       <div class="schedule-timeline">
         <div class="schedule-item">
           <div class="schedule-time">11:00</div>
-          <div class="schedule-event"><h3>Сбор гостей</h3><p>Локация: «Шекснинский отдел ЗАГС»</br>рп. Шексна, ул. Октябрьская, д. 67</p></div>
+          <div class="schedule-event"><h3>Сбор гостей</h3><p>Локация: «Отдел ЗАГС»</p></div>
         </div>
         <div class="schedule-item">
           <div class="schedule-time">12:30</div>
@@ -527,8 +524,8 @@
 
       <div style="margin-top: 4rem; padding-top: 2rem; border-top: 1px solid rgba(255,255,255,0.1);">
         <h2 class="section-title" style="color: var(--text-light)">Локация</h2>
-        <h3 style="font-size: 1.5rem; margin-bottom: 0.5rem;">Банкетный зал "Северная"</h3>
-        <p style="margin-bottom: 2rem; opacity: 0.8;">пгт. Шексна, мкр. Шексна Северная,<br>ул. Первомайская, 1А</p>
+        <h3 style="font-size: 1.5rem; margin-bottom: 0.5rem;">Банкетный зал</h3>
+        <p style="margin-bottom: 2rem; opacity: 0.8;">Мск<br>ул. Первомайская, 1А</p>
         
         <div class="map-wrapper">
             <div class="map-overlay" onclick="this.style.pointerEvents='none'; this.style.opacity='0';"></div>
@@ -577,7 +574,7 @@
         </div>
         <div class="details-item">
           <h3>Связь</h3>
-          <p>Жених: <a href="tel:+79629950057">+7 (962) 995-00-57</a></p>
+          <p>Жених: <a href="tel:+79000000000">+7 (000) 999-00-55</a></p>
         </div>
       </div>
     </div>
@@ -689,7 +686,6 @@
 
     document.querySelectorAll('[data-animate]').forEach(el => observer.observe(el));
 
-    // Hero-цветы: появление через 0.5с и скрытие при скролле (как на первом сайте)
     const heroSection = document.querySelector('.hero-section');
     const heroFlowers = document.querySelectorAll('.hero-flower');
     let heroFlowersVisible = false;
@@ -714,7 +710,6 @@
     }
     window.addEventListener('scroll', handleHeroScroll, { passive: true });
 
-    // Плавающие цветы
     function createFloatingHearts() {
       const container = document.getElementById('floatingHearts');
       for (let i = 0; i < 8; i++) {
@@ -759,8 +754,8 @@
 🤧 Аллергии: ${formData.get('allergies') || '—'}`;
 
       const TOKEN = '';
-      const CHAT_ID = '-1003830584076';
-      const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxfsYsfwQ6Qlw6gDwPInwbMiMy3DPwJCqpSGQPL6n7_6PaQMFSq3pFZAydXHG832JI/exec'; // Вставь сюда URL веб-приложения из Google Apps Script
+      const CHAT_ID = '';
+      const GOOGLE_SCRIPT_URL = ''; 
 
       const payload = {
         name: formData.get('name'),
@@ -782,8 +777,6 @@
           body: JSON.stringify({ chat_id: CHAT_ID, text: text, parse_mode: 'html' })
         });
         if (GOOGLE_SCRIPT_URL) {
-          // Важно: Apps Script плохо дружит с CORS/preflight для JSON.
-          // Поэтому шлём "simple request" (form-urlencoded), это стабильно.
           const googleBody = new URLSearchParams({
             name: payload.name,
             attendance: payload.attendance,
@@ -797,7 +790,6 @@
             allergies: payload.allergies
           }).toString();
 
-          // 1) Самый живучий вариант (без CORS/ответа)
           let sentToGoogle = false;
           try {
             if (navigator.sendBeacon) {
@@ -806,7 +798,6 @@
             }
           } catch (_) {}
 
-          // 2) Если beacon не сработал — пробуем fetch
           if (!sentToGoogle) {
             try {
               await fetch(GOOGLE_SCRIPT_URL, {
@@ -818,7 +809,6 @@
             } catch (_) {}
           }
 
-          // 3) Последний фоллбек: GET через картинку (нужен doGet в Apps Script)
           if (!sentToGoogle) {
             const img = new Image();
             img.src = `${GOOGLE_SCRIPT_URL}?${googleBody}`;
