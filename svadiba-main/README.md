@@ -1,2 +1,0 @@
-# svadiba
-VIKA max
